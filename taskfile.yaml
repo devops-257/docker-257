@@ -1,0 +1,40 @@
+version: '3'
+
+dotenv:
+  - ./taskfile.d/.env
+  - .env
+
+tasks:
+
+  startup:
+    cmds:
+      - cmd: docker swarm init
+      - task: docker:network:create
+
+  docker:network:create:
+    desc: 'Create a network for communication between services [NETWORK, DRIVER]'
+    vars:
+      # [NETWORK]: "services-network"
+      # [DRIVER]: "overlay"
+      _NETWORK: '{{if .NETWORK}}{{.NETWORK}}{{else}}services-network{{end}}'
+      _DRIVER: '{{if .NETWORK}}{{.DRIVER}}{{else}}overlay{{end}}'
+    cmds:
+      - >
+        docker network create
+        --driver {{._DRIVER}}
+        --attachable
+        {{._NETWORK}}
+
+  docker:deploy:fix:
+    desc: 'Deploy to cluster <STACK> [CONFIGS] -- [-c CONFIG]... E.g. `-c traefik/compose.yaml -c override.yaml`'
+    requires:
+      vars: [STACK]
+    vars:
+      _CONF: '{{if .CONFIG}}{{.CONFIG}}{{else if .CLI_ARGS}}{{.CLI_ARGS}}{{end}}'
+    cmds:
+      - >
+        docker compose --project-directory stacks/{{.STACK}} config {{._CONF}}
+        | grep -v ^name
+        | sed 's/published: "\([0-9]\+\)"/published: \1/g'
+        | sed 's/cpus: \(.\+\)/cpus: "\1"/g'
+        | docker stack deploy -c - {{.STACK}}

@@ -1,0 +1,17 @@
+services:
+  portainer:
+    deploy:
+      mode: ${DEPLOY_MODE:-replicated}
+      replicas: ${REPLICAS:-1}
+      placement:
+        constraints:
+          - ${CONSTRAINT:-node.platform.os==linux}
+      restart_policy:
+        condition: any
+        delay: 10s
+        window: 120s
+        max_attempts: ${MAX_ATTEMPTS:-0}
+      resources:
+        limits:
+          cpus: ${CPUS:-1.00}
+          memory: ${MEMORY:-1024M}

@@ -32,9 +32,3 @@ It's not recommended to modify project's compose files. If you want to change so
 vim stacks/portainer/compose.override.yaml
 docker stack deploy -c stacks/portainer/compose.yaml -c stacks/portainer/compose.override.yaml
 ```
-
-## TODOs
-
-- [ ] Customize service name
-- [ ] Customize limitation
-- [ ] Customize volume

@@ -29,6 +29,12 @@ You can use this git repo directly. It is recommended to use [Portainer](https:/
 It's not recommended to modify project's compose files. If you want to change something, it is better to create a new compose file to override fields. For example:
 
 ```bash
-vim stacks/compose.portainer.override.yaml
-docker stack deploy -c stack/compose.portainer.yaml -c stacks/compose.portainer.override.yaml
+vim stacks/portainer/compose.override.yaml
+docker stack deploy -c stacks/portainer/compose.yaml -c stacks/portainer/compose.override.yaml
 ```
+
+## TODOs
+
+- [ ] Customize service name
+- [ ] Customize limitation
+- [ ] Customize volume

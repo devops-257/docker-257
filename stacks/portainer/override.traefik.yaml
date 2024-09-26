@@ -1,0 +1,27 @@
+services:
+  portainer:
+    deploy:
+      labels:
+        - traefik.enable=${TRAEFIK:-true}
+        - traefik.http.routers.${APP_NAME:-portainer}.entrypoints=${HTTP_ENTRYPOINT:-http}
+        - traefik.http.routers.${APP_NAME:-portainer}.rule=Host(`${DOMAIN}`)
+        - traefik.http.routers.${APP_NAME:-portainer}.middlewares=${REDIR_HTTPS:-redir-https}
+        - traefik.http.routers.${APP_NAME:-portainer}-ssl.entrypoints=${HTTPS_ENTRYPOINT:-https}
+        - traefik.http.routers.${APP_NAME:-portainer}-ssl.tls=true
+        - traefik.http.routers.${APP_NAME:-portainer}-ssl.tls.certresolver=${CERTRESOLVER:-le}
+        - traefik.http.routers.${APP_NAME:-portainer}-ssl.rule=Host(`${DOMAIN}`)
+        - traefik.http.routers.${APP_NAME:-portainer}-ssl.service=${APP_NAME:-portainer}
+        - traefik.http.routers.${APP_NAME:-portainer}-ssl.middlewares=${GZIP:-gzip}${MIDDLEWARES}
+        - traefik.http.services.${APP_NAME:-portainer}.loadbalancer.server.port=${APP_PORT:-9000}
+    labels:
+      - traefik.enable=${TRAEFIK:-true}
+      - traefik.http.routers.${APP_NAME:-portainer}.entrypoints=${HTTP_ENTRYPOINT:-http}
+      - traefik.http.routers.${APP_NAME:-portainer}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${APP_NAME:-portainer}.middlewares=${REDIR_HTTPS:-redir-https}
+      - traefik.http.routers.${APP_NAME:-portainer}-ssl.entrypoints=${HTTPS_ENTRYPOINT:-https}
+      - traefik.http.routers.${APP_NAME:-portainer}-ssl.tls=true
+      - traefik.http.routers.${APP_NAME:-portainer}-ssl.tls.certresolver=${CERTRESOLVER:-le}
+      - traefik.http.routers.${APP_NAME:-portainer}-ssl.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${APP_NAME:-portainer}-ssl.service=${APP_NAME:-portainer}
+      - traefik.http.routers.${APP_NAME:-portainer}-ssl.middlewares=${GZIP:-gzip}${MIDDLEWARES}
+      - traefik.http.services.${APP_NAME:-portainer}.loadbalancer.server.port=${APP_PORT:-9000}
